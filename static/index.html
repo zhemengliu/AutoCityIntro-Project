@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>AutoCityIntro · 智能城市助手</title>
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div id="sidebarOverlay" class="overlay"></div>
+  <div id="mapOverlay" class="overlay"></div>
+
+  <div class="app-shell">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <h1>CityIntro</h1>
+          <p>智能城市助手</p>
+        </div>
+      </div>
+      <button id="newChatBtn" type="button" class="btn-new-chat">
+        <span class="icon" id="newChatIcon"></span>
+        新对话
+      </button>
+      <div id="checkinCard" class="checkin-card">
+        <div class="checkin-header">
+          <span class="checkin-icon">🎁</span>
+          <div class="checkin-info">
+            <div id="checkinBtn" class="checkin-btn">
+              <span id="checkinText">每日签到</span>
+            </div>
+            <p id="checkinDays" class="checkin-days">连续 0 天</p>
+          </div>
+        </div>
+        <div class="checkin-progress">
+          <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+          <p class="progress-text">距离大奖还有 <span id="daysLeft">7</span> 天</p>
+        </div>
+        <div id="stepProgress" class="step-progress">
+          <p id="stepText" class="step-text">🏃 0/3000 步</p>
+          <div class="progress-track step-track">
+            <div id="stepProgressBar" class="progress-bar step-bar"></div>
+          </div>
+        </div>
+      </div>
+      <section class="sidebar-explore-block" aria-label="城市探索">
+        <div class="sidebar-explore-head">
+          <span id="cityExploreTitle" class="sidebar-label">城市探索</span>
+          <p id="cityNavLocation" class="city-nav-location">未定位</p>
+        </div>
+        <nav id="cityNavMenu" class="city-nav-menu" aria-label="城市探索导航"></nav>
+        <div id="cityNavContent" class="city-nav-content">
+          <p class="city-nav-placeholder">选择类别探索当前城市<br><span>结果与对话历史同列展示</span></p>
+        </div>
+        <div id="cityNavLinks" class="city-nav-links hidden"></div>
+      </section>
+      <div class="sidebar-divider" aria-hidden="true"></div>
+      <div class="sidebar-block favorites-block">
+        <div class="sidebar-label">我的城市</div>
+        <p class="sidebar-sublabel">收藏 · 偏好 · 常去城市</p>
+        <div id="favoritesPanel" class="favorites-panel"></div>
+      </div>
+      <div class="sidebar-label">最近对话</div>
+      <ul id="sessionList" class="session-list"></ul>
+    </aside>
+
+    <div id="sidebarResize" class="resize-handle" title="拖动调整侧栏宽度" aria-hidden="true"></div>
+
+    <div class="main-column">
+      <header class="topbar">
+        <button type="button" id="sidebarToggle" class="btn-icon-only" aria-label="打开菜单">
+          <span class="icon" id="menuIcon"></span>
+        </button>
+        <div class="topbar-title">
+          <h2 id="chatTitle">新对话</h2>
+          <p id="locationPill" class="location-pill">未定位 · 点击定位以获取周边推荐</p>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" id="toggleMapBtn" class="btn-icon-only" title="地图面板">
+            <span class="icon" id="mapIcon"></span>
+          </button>
+          <button type="button" id="companionBtn" class="btn-companion" title="下一站建议">
+            <span class="icon" id="compassIcon"></span>
+            下一站
+          </button>
+          <div class="menu-wrap">
+            <button type="button" id="moreMenuBtn" class="btn-icon-only" aria-label="更多">
+              <span class="icon" id="moreIcon"></span>
+            </button>
+            <div id="moreMenu" class="dropdown hidden">
+              <button type="button" id="themeToggleBtn">🎨 主题切换</button>
+              <button type="button" id="settingsOpenBtn">设置与隐私</button>
+              <button type="button" id="clearProfileBtn">清除个性化记忆</button>
+              <button type="button" id="exportSessionBtn">导出对话 Markdown</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div id="statusBar" class="status-bar hidden">
+        <span class="status-dot"></span>
+        <span id="statusText">正在处理...</span>
+        <button type="button" id="stopCompanionBtn" class="btn-stop-companion hidden" title="停止伴游">
+          <span class="icon" id="stopIcon"></span>
+          停止伴游
+        </button>
+      </div>
+
+      <main id="messages" class="messages"></main>
+
+      <div id="suggestionChips" class="suggestion-chips"></div>
+
+      <footer class="composer-wrap">
+        <form id="chatForm" class="composer">
+          <div class="composer-tools">
+            <button type="button" id="locationBtn" class="tool-btn" title="定位">
+              <span class="icon" id="locIcon"></span>
+            </button>
+            <button type="button" id="voiceBtn" class="tool-btn" title="语音">
+              <span class="icon" id="micIcon"></span>
+            </button>
+            <button type="button" id="cameraBtn" class="tool-btn" title="识景">
+              <span class="icon" id="camIcon"></span>
+            </button>
+          </div>
+          <textarea
+            id="messageInput"
+            rows="1"
+            placeholder="问天气、路线、周边美食与景点，或规划半日游..."
+          ></textarea>
+          <button type="submit" id="sendBtn" class="send-btn" aria-label="发送">
+            <span class="icon" id="sendIcon"></span>
+          </button>
+        </form>
+        <p id="voiceHint" class="composer-hint"></p>
+      </footer>
+    </div>
+
+    <div id="mapResize" class="resize-handle resize-handle-map" title="拖动调整地图宽度" aria-hidden="true"></div>
+
+    <aside id="mapPanel" class="map-panel">
+      <div class="map-panel-header">
+        <div>
+          <h3 id="mapPanelTitle">地图</h3>
+          <p id="mapPanelMeta" class="map-panel-meta"></p>
+        </div>
+        <button type="button" id="mapPanelClose" class="btn-icon-only" aria-label="关闭地图">
+          <span class="icon" id="mapCloseIcon"></span>
+        </button>
+      </div>
+      <div id="mapPanelContainer" class="map-panel-container"></div>
+      <div id="mapPanelActions" class="map-panel-actions"></div>
+    </aside>
+  </div>
+
+  <div id="mapSheet" class="map-sheet">
+    <div class="sheet-handle"></div>
+    <div class="map-panel-header">
+      <div>
+        <h3 id="mapSheetTitle">地图</h3>
+        <p id="mapSheetMeta" class="map-panel-meta"></p>
+      </div>
+      <button type="button" id="mapSheetClose" class="btn-icon-only">
+        <span class="icon"></span>
+      </button>
+    </div>
+    <div id="mapSheetContainer" class="map-panel-container"></div>
+  </div>
+
+  <input type="file" id="imageInput" accept="image/*" hidden />
+
+  <div id="routePlannerOverlay" class="overlay route-planner-overlay" aria-hidden="true">
+    <div class="route-planner" role="dialog" aria-labelledby="routePlannerTitle">
+      <div class="route-planner-header">
+        <h3 id="routePlannerTitle">路线导航</h3>
+        <button type="button" id="routePlannerClose" class="btn-icon-only" aria-label="关闭">×</button>
+      </div>
+      <div class="route-planner-body">
+        <label class="route-field-label">起点</label>
+        <div id="routePlannerOrigin" class="route-origin">正在定位...</div>
+        <label class="route-field-label" for="routePlannerDest">目的地</label>
+        <input
+          id="routePlannerDest"
+          class="route-dest-input"
+          type="text"
+          placeholder="输入地址或地点，如：大雁塔、国贸商城"
+          autocomplete="off"
+        />
+        <div class="route-mode-tabs" role="tablist" aria-label="出行方式">
+          <button type="button" class="route-mode-tab active" data-mode="driving" role="tab">驾车</button>
+          <button type="button" class="route-mode-tab" data-mode="walking" role="tab">步行</button>
+          <button type="button" class="route-mode-tab" data-mode="transit" role="tab">公交/地铁</button>
+        </div>
+        <p id="routePlannerError" class="route-planner-error hidden"></p>
+      </div>
+      <div class="route-planner-footer">
+        <button type="button" id="routePlannerGo" class="route-planner-go">在高德 App 中导航</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="poiDetailOverlay" class="overlay modal-overlay">
+    <div class="poi-detail-dialog modal-dialog" role="dialog">
+      <div class="modal-header">
+        <h3>地点详情</h3>
+        <button type="button" id="poiDetailClose" class="btn-icon-only" aria-label="关闭">×</button>
+      </div>
+      <div id="poiDetailBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="settingsOverlay" class="overlay modal-overlay">
+    <div class="modal-dialog settings-dialog" role="dialog">
+      <div class="modal-header">
+        <h3>设置与隐私</h3>
+        <button type="button" id="settingsCloseBtn" class="btn-icon-only">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="settingsPersona" class="settings-persona"></div>
+        <div id="settingsProfile" class="settings-profile"></div>
+        <div class="settings-actions">
+          <button type="button" id="settingsExportBtn" class="btn-ghost">导出当前对话</button>
+          <button type="button" id="settingsAdminBtn" class="btn-ghost">打开运行监控</button>
+          <button type="button" id="settingsDeleteBtn" class="btn-ghost danger-text">删除我的数据</button>
+        </div>
+        <h4>隐私政策</h4>
+        <pre id="settingsPolicy" class="settings-policy"></pre>
+      </div>
+    </div>
+  </div>
+
+  <div id="shareOverlay" class="overlay modal-overlay">
+    <div class="modal-dialog" role="dialog">
+      <div class="modal-header">
+        <h3>分享行程</h3>
+        <button type="button" id="shareCloseBtn" class="btn-icon-only">×</button>
+      </div>
+      <div class="modal-body share-body">
+        <img id="shareQrImg" class="share-qr" alt="二维码" width="160" height="160" />
+        <input id="shareUrlInput" class="share-url-input" readonly />
+        <button type="button" id="shareCopyBtn" class="route-planner-go">复制链接</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主题选择弹窗 -->
+  <div id="themeOverlay" class="overlay modal-overlay">
+    <div class="theme-dialog modal-dialog" role="dialog">
+      <div class="modal-header">
+        <h3>🎨 选择主题</h3>
+        <button type="button" id="themeCloseBtn" class="btn-icon-only">×</button>
+      </div>
+      <div class="modal-body theme-body">
+        <div id="themeList" class="theme-list">
+          <!-- 主题列表由JS动态生成 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 签到弹窗 -->
+  <div id="checkinOverlay" class="overlay modal-overlay">
+    <div class="checkin-dialog modal-dialog" role="dialog">
+      <div class="modal-header">
+        <h3>🎊 每日签到</h3>
+        <button type="button" id="checkinCloseBtn" class="btn-icon-only">×</button>
+      </div>
+      <div class="modal-body checkin-body">
+        <div class="checkin-calendar">
+          <div id="checkinDaysContainer" class="checkin-days-container">
+            <!-- 7天签到卡片将由JS动态生成 -->
+          </div>
+        </div>
+        <div id="checkinReward" class="checkin-reward hidden">
+          <div class="reward-icon">🎉</div>
+          <h4 id="rewardTitle">签到成功！</h4>
+          <p id="rewardDesc">获得奖励</p>
+          <div id="rewardAmount" class="reward-amount"></div>
+        </div>
+        <div id="stepWarning" class="step-warning hidden">
+          <p>🚶 今日步数：0/3000 步</p>
+          <p>还需走 3000 步才能签到</p>
+        </div>
+        <button id="doCheckinBtn" class="checkin-action-btn" disabled>
+          点击签到
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 撒花动画容器 -->
+  <div id="confettiContainer" class="confetti-container"></div>
+
+  <!-- AR寻宝覆盖层 -->
+  <div id="arOverlay" class="ar-overlay hidden">
+    <video id="arVideo" autoplay playsinline></video>
+    <div class="ar-content">
+      <button type="button" id="arCloseBtn" class="ar-close-btn" aria-label="关闭">×</button>
+      <!-- 宝箱图片容器 -->
+      <div id="arChest" class="ar-chest">
+        <!-- 闭合状态的宝箱 -->
+        <div id="chestClosed" class="chest-container chest-closed">
+          <div class="chest-lid"></div>
+          <div class="chest-body"></div>
+          <div class="chest-lock"></div>
+        </div>
+        <!-- 打开状态的宝箱 -->
+        <div id="chestOpened" class="chest-container chest-opened hidden">
+          <div class="chest-lid-open"></div>
+          <div class="chest-body"></div>
+          <div class="chest-glow"></div>
+          <div class="treasure-item t1">💎</div>
+          <div class="treasure-item t2">👑</div>
+          <div class="treasure-item t3">⭐</div>
+        </div>
+        <!-- 宝箱容器结束 -->
+      </div>
+      <button type="button" id="arOpenChestBtn" class="ar-open-btn">点击开宝箱</button>
+    </div>
+    <!-- 奖励弹窗：半透明黑色遮罩层 + 白色卡片容器 -->
+    <div id="arRewardPanel" class="ar-reward-panel hidden">
+      <div id="arRewardContent" class="ar-reward-content">
+        <div class="reward-header">
+          <div class="reward-icon-container">
+            <span class="reward-emoji">🎉</span>
+            <span class="confetti-piece c1">✨</span>
+            <span class="confetti-piece c2">🌟</span>
+            <span class="confetti-piece c3">💫</span>
+            <span class="confetti-piece c4">⭐</span>
+          </div>
+          <h3>恭喜发现宝藏！</h3>
+          <p id="rewardSpotName" class="reward-spot-name"></p>
+        </div>
+        <div id="rewardList" class="reward-list"></div>
+      </div>
+      <button type="button" id="arClaimRewardBtn" class="ar-claim-btn">领取奖励</button>
+    </div>
+  </div>
+
+  <script src="/static/theme.js"></script>
+  <script src="/static/checkin.js"></script>
+  <script src="/static/city-nav.js"></script>
+  <script src="/static/persona.js"></script>
+  <script src="/static/icons.js"></script>
+  <script src="/static/markdown.js"></script>
+  <script src="/static/map-route.js"></script>
+  <script src="/static/amap-uri.js"></script>
+  <script src="/static/route-planner.js"></script>
+  <script src="/static/map-panel.js"></script>
+  <script src="/static/panel-resize.js"></script>
+  <script src="/static/voice.js"></script>
+  <script src="/static/multimodal.js"></script>
+  <script src="/static/poi-detail.js"></script>
+  <script src="/static/share-panel.js"></script>
+  <script src="/static/settings-panel.js"></script>
+  <script src="/static/chat-stream.js"></script>
+  <script src="/static/feedback.js"></script>
+  <script src="/static/favorites-panel.js"></script>
+  <script src="/static/trip-card.js"></script>
+  <script src="/static/ar-treasure.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
