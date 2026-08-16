@@ -1,0 +1,24 @@
+{
+  "session_id": "e8eddb6d-01b6-4365-b352-f5aade39c9fe",
+  "title": "你好",
+  "device_id": "b6e9ba8a-f978-426f-b480-b90741763cce",
+  "created_at": "2026-06-01T17:14:22",
+  "updated_at": "2026-06-02T09:28:33",
+  "conversation_history": [
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好呀！你现在在西北农林科技大学北校区，杨凌这片儿挺安静的，适合慢慢逛。想聊聊周边的景点、路线，还是帮你看看天气？"
+    },
+    {
+      "role": "user",
+      "content": "规划半日游"
+    }
+  ],
+  "tool_call_history": [],
+  "user_location": "108.069826,34.288869",
+  "user_location_label": "咸阳市 · 杨陵区"
+}

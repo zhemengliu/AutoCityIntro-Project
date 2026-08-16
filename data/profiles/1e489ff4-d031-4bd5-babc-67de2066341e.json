@@ -1,0 +1,123 @@
+{
+  "device_id": "1e489ff4-d031-4bd5-babc-67de2066341e",
+  "created_at": "2026-06-02T15:47:08",
+  "updated_at": "2026-06-03T10:58:03",
+  "preferences": {
+    "focus": "mixed",
+    "transport": "driving",
+    "time_of_day": "any"
+  },
+  "favorite_cities": [
+    "咸阳市"
+  ],
+  "recent_pois": [
+    {
+      "name": "统一广场",
+      "city": "咸阳市",
+      "category": "风景名胜;公园广场;城市广场",
+      "location": "108.717959,34.330056",
+      "visited_at": "2026-06-03T10:58:03"
+    },
+    {
+      "name": "咸阳古渡廊桥",
+      "city": "咸阳市",
+      "category": "风景名胜;风景名胜;风景名胜",
+      "location": "108.724751,34.330845",
+      "visited_at": "2026-06-03T10:58:03"
+    },
+    {
+      "name": "咸阳湖景区",
+      "city": "咸阳市",
+      "category": "风景名胜;风景名胜;风景名胜",
+      "location": "108.718710,34.328756",
+      "visited_at": "2026-06-03T10:58:03"
+    },
+    {
+      "name": "咸阳市",
+      "city": "咸阳市",
+      "category": "city",
+      "location": "",
+      "visited_at": "2026-06-03T10:58:03"
+    },
+    {
+      "name": "第3站 福音堂",
+      "city": "咸阳市",
+      "category": "风景名胜;风景名胜;教堂",
+      "location": "108.078150,34.281508",
+      "visited_at": "2026-06-03T10:00:50"
+    },
+    {
+      "name": "第2站 五台山环道公园",
+      "city": "咸阳市",
+      "category": "风景名胜;公园广场;公园",
+      "location": "108.074494,34.279810",
+      "visited_at": "2026-06-03T10:00:50"
+    },
+    {
+      "name": "第1站 药王洞",
+      "city": "咸阳市",
+      "category": "风景名胜;风景名胜;风景名胜",
+      "location": "108.068244,34.281758",
+      "visited_at": "2026-06-03T10:00:50"
+    },
+    {
+      "name": "西北农林科技大学南校区-中国农业历史博物馆",
+      "city": "咸阳市",
+      "category": "科教文化服务;博物馆;博物馆",
+      "location": "108.070860,34.266224",
+      "visited_at": "2026-06-03T08:37:15"
+    }
+  ],
+  "recent_routes": [
+    {
+      "origin": "108.069946,34.288504",
+      "destination": "108.078150,34.281508",
+      "mode": "driving",
+      "used_at": "2026-06-03T10:58:03"
+    },
+    {
+      "origin": "咸阳市 · 杨陵区",
+      "destination": "福音堂",
+      "mode": "driving",
+      "used_at": "2026-06-03T10:00:50"
+    },
+    {
+      "origin": "108.069679,34.288817",
+      "destination": "108.078150,34.281508",
+      "mode": "driving",
+      "used_at": "2026-06-03T09:57:00"
+    },
+    {
+      "origin": "108.069679,34.288817",
+      "destination": "108.072521,34.265998",
+      "mode": "driving",
+      "used_at": "2026-06-03T09:07:42"
+    },
+    {
+      "origin": "108.069679,34.288817",
+      "destination": "西北农林科技大学南校区-中国农业历史博物馆",
+      "mode": "driving",
+      "used_at": "2026-06-03T08:37:15"
+    },
+    {
+      "origin": "108.069662,34.288749",
+      "destination": "108.073,34.272",
+      "mode": "driving",
+      "used_at": "2026-06-02T16:08:41"
+    }
+  ],
+  "query_topics": [
+    "周边"
+  ],
+  "last_location": "108.069946,34.288504",
+  "last_location_label": "咸阳市 · 杨陵区",
+  "last_city": "咸阳市",
+  "poi_weights": {},
+  "feedback_history": [],
+  "current_persona": "scholar",
+  "favorite_trip_ids": [
+    "ad90bab8-9b0b-4b49-ab71-21180824dd0e",
+    "4e633eca-1e4c-4cad-b85a-e6035fcb09c3",
+    "ae7d1919-dd7a-4a38-8086-ceb624c6eb95"
+  ]
+}

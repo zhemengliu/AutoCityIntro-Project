@@ -1,0 +1,16 @@
+{
+  "session_id": "2c004338-c129-4586-b2fd-6d6036794050",
+  "title": "从当前位置到老地方烧烤怎么走？",
+  "device_id": "b6e9ba8a-f978-426f-b480-b90741763cce",
+  "created_at": "2026-06-01T16:27:17",
+  "updated_at": "2026-06-02T16:08:09",
+  "conversation_history": [
+    {
+      "role": "user",
+      "content": "从当前位置到老地方烧烤怎么走？"
+    }
+  ],
+  "tool_call_history": [],
+  "user_location": "108.069662,34.288749",
+  "user_location_label": "咸阳市 · 杨陵区"
+}
